@@ -1,2 +1,2 @@
-string nodeId
-string qualifiedName
+string nodeid
+string qualifiedname
