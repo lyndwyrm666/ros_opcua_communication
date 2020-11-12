@@ -1,5 +1,12 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(ros_opcua_impl_freeopcua)
+
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
 
 set(BUILD_CLIENT ON)
 set(BUILD_SERVER ON)
@@ -10,47 +17,46 @@ add_subdirectory(freeopcua)
 
 set(FreeOpcUa_LIBRARIES opcua)
 
-find_package(catkin REQUIRED
-  roscpp
-  ros_opcua_msgs
-  ros_opcua_srvs
-)
-
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(ros_opcua_msgs REQUIRED)
+find_package(ros_opcua_srvs REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system thread)
-
-catkin_package(
-  LIBRARIES opcuaprotocol opcuacore opcuaclient opcuaserver
-  INCLUDE_DIRS include freeopcua/include
-  CATKIN_DEPENDS roscpp ros_opcua_msgs ros_opcua_srvs
-)
 
 ###########
 ## Build ##
 ###########
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 include_directories(
   include
   freeopcua/include
-  ${catkin_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
 )
 
 add_executable(client_node src/opcua_client.cpp)
-add_dependencies(client_node ros_opcua_msgs_generate_messages_cpp ros_opcua_srvs_generate_messages_cpp)
-target_link_libraries(client_node ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${FreeOpcUa_LIBRARIES})
+ament_target_dependencies(client_node ros_opcua_msgs ros_opcua_srvs rclcpp)
+target_link_libraries(client_node ${Boost_LIBRARIES} ${FreeOpcUa_LIBRARIES})
+#rosidl_target_interfaces(client_node ros_opcua_msgs ros_opcua_srvs)
 
 #############
 ## Install ##
 #############
 
 install(TARGETS client_node
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  ARCHIVE DESTINATION ${lib}
+  LIBRARY DESTINATION ${lib}
+  RUNTIME DESTINATION ${lib}/${PROJECT_NAME}}
 )
 
-install(DIRECTORY launch
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+install(DIRECTORY launch/ DESTINATION ${share}/${PROJECT_NAME}}
 )
+install(DIRECTORY include/ DESTINATION include}
+)
+
+ament_export_dependencies(rclcpp ros_opcua_msgs ros_opcua_srvs)
+ament_export_include_directories(include freeopcua/include)
+ament_export_libraries(opcuaprotocol opcuacore opcuaclient opcuaserver)
+
+ament_package()

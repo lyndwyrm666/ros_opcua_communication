@@ -20,8 +20,8 @@
  *              along with SkillPro-Framework. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ros_opcua_msgs/Address.h"
-#include "ros_opcua_msgs/TypeValue.h"
+#include "ros_opcua_msgs/msg/Address.hpp"
+#include "ros_opcua_msgs/msg/TypeValue.hpp"
 
 #include <opc/ua/node.h>
 #include <opc/ua/protocol/string_utils.h>
@@ -137,9 +137,9 @@ std::map<int, std::string> _TypeToStringMap = {
  * @param variant Variant to be converted.
  * @return TypeValue object created from variant.
  */
-ros_opcua_msgs::TypeValue convertVariantToTypeValue(const OpcUa::Variant& variant) {
+ros_opcua_msgs::msg::TypeValue convertVariantToTypeValue(const OpcUa::Variant& variant) {
     
-    ros_opcua_msgs::TypeValue typeValue;
+    ros_opcua_msgs::msg::TypeValue typeValue;
     
     typeValue.type = _TypeToStringMap[(int)variant.Type()];
     
@@ -191,7 +191,7 @@ ros_opcua_msgs::TypeValue convertVariantToTypeValue(const OpcUa::Variant& varian
  * @param typeValue TypeValue to be converted
  * @return Variant object created from typeValue
  */
-OpcUa::Variant convertTypeValueToVariant(ros_opcua_msgs::TypeValue& typeValue)
+OpcUa::Variant convertTypeValueToVariant(ros_opcua_msgs::msg::TypeValue& typeValue)
 {
     OpcUa::Variant variant;
 

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>ros_opcua_impl_freeopcua</name>
   <version>0.2.0</version>
   <description>The ros_opcua_impl_freeopcua package implements bindings for freeopcua - Open Source C++ OPC-UA Server and Client Library.</description>
@@ -14,10 +14,13 @@
 
   <author email="denis.stogl@kit.edu">Denis Štogl</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>ros_opcua_msgs</depend>
   <depend>ros_opcua_srvs</depend>
-  <depend>roscpp</depend>
+  <depend>rclcpp</depend>
   <depend>rospy</depend>
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 
   </package>
