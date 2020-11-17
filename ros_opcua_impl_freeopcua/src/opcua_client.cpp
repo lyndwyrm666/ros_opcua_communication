@@ -26,17 +26,17 @@
 #include <signal.h>
 #include <opcua_helpers.h>
 
-#include "ros_opcua_msgs/msg/Address.hpp"
-#include "ros_opcua_msgs/msg/TypeValue.hpp"
+#include "ros_opcua_msgs/msg/address.hpp"
+#include "ros_opcua_msgs/msg/type_value.hpp"
 
-#include "ros_opcua_srvs/srv/CallMethod.hpp"
-#include "ros_opcua_srvs/srv/Connect.hpp"
-#include "ros_opcua_srvs/srv/Disconnect.hpp"
-#include "ros_opcua_srvs/srv/ListNode.hpp"
-#include "ros_opcua_srvs/srv/Read.hpp"
-#include "ros_opcua_srvs/srv/Subscribe.hpp"
-#include "ros_opcua_srvs/srv/Write.hpp"
-#include "ros_opcua_srvs/srv/Unsubscribe.hpp"
+#include "ros_opcua_srvs/srv/call_method.hpp"
+#include "ros_opcua_srvs/srv/connect.hpp"
+#include "ros_opcua_srvs/srv/disconnect.hpp"
+#include "ros_opcua_srvs/srv/list_node.hpp"
+#include "ros_opcua_srvs/srv/read.hpp"
+#include "ros_opcua_srvs/srv/subscribe.hpp"
+#include "ros_opcua_srvs/srv/write.hpp"
+#include "ros_opcua_srvs/srv/unsubscribe.hpp"
 
 #include <opc/ua/client/client.h>
 #include <opc/ua/subscription.h>
@@ -48,7 +48,7 @@ OpcUa::UaClient _client(false);
 std::map<std::string, std::shared_ptr<OpcUa::Subscription>> _subscriptions;
 /// Callback publishers list
 /** Key is OpcUa string node identifier and value ROS publisher */
-std::map<std::string, rclcpp::Publisher> _callback_publishers;
+std::map<std::string, std::shared_ptr<rclcpp::Publisher<ros_opcua_msgs::msg::TypeValue, std::allocator<void>>>> _callback_publishers;
 /// List of subscription handles
 /** Key is OpcUa string node identifier and value is node handle. This is needed for deteting of subscriptions*/
 std::map<std::string, uint32_t> _subscription_handles;
@@ -72,7 +72,7 @@ class SubClient : public OpcUa::SubscriptionHandler
 OpcUa::Variant& value, OpcUa::AttributeId attr) override
   {
     //ROS_DEBUG("Callback....");
-    _callback_publishers[OpcUa::ToString(node.GetId())].publish(convertVariantToTypeValue(value));
+    _callback_publishers[OpcUa::ToString(node.GetId())]->publish(convertVariantToTypeValue(value));
   }
 };
 
@@ -379,7 +379,6 @@ bool unsubscribe(ros_opcua_srvs::srv::Unsubscribe::Request &req, ros_opcua_srvs:
         std::string node_string = OpcUa::ToString(variable.GetId());
 
         _subscriptions[node_string]->UnSubscribe(_subscription_handles[node_string]);
-        _callback_publishers[node_string].shutdown();
 
         _subscriptions.erase(node_string);
         _subscription_handles.erase(node_string);
@@ -424,44 +423,46 @@ void on_shutdown(int sig)
  */
 int main (int argc, char** argv)
 {
-    rclcpp::init(argc, argv, "opcua_client_node");
-    auto nodeHandle = rclcpp::NodeHandle::make_shared("~");
+    rclcpp::init(argc, argv);
+    auto nodeHandle = rclcpp::Node::make_shared("~");
     signal(SIGINT, on_shutdown);
     
+    //Connect
     rclcpp::Service<ros_opcua_srvs::srv::Connect>::SharedPtr connect_service =
-    nodeHandle->create_service<ros_opcua_srvs::srv::Connect>("connect", connect);
-
+    nodeHandle->create_service<ros_opcua_srvs::srv::Connect>("connect", &connect);
     //ROS_DEBUG("OPC-UA client node %s: 'Connect' service available on on: %s", ros::this_node::getName().c_str(), connect_service.getService().c_str());
+    
+    //Disconnect
     rclcpp::Service<ros_opcua_srvs::srv::Disconnect>::SharedPtr disconnect_service =
-    nodeHandle->create_service<ros_opcua_srvs::srv::Connect>("disconnect", disconnect);
+    nodeHandle->create_service<ros_opcua_srvs::srv::Disconnect>("disconnect", &disconnect);
     //ROS_DEBUG("OPC-UA client node %s: 'Disconnect' service available on: %s", ros::this_node::getName().c_str(), disconnect_service.getService().c_str());
 
     // List node
     rclcpp::Service<ros_opcua_srvs::srv::ListNode>::SharedPtr list_service =
-    nodeHandle->create_service<ros_opcua_srvs::srv::ListNode>("list", list_node);
+    nodeHandle->create_service<ros_opcua_srvs::srv::ListNode>("list", &list_node);
     //ROS_DEBUG("OPC-UA client node %s: 'ListNode' service available on on: %s", ros::this_node::getName().c_str(), connect_service.getService().c_str());
 
     // Method Call
     rclcpp::Service<ros_opcua_srvs::srv::CallMethod>::SharedPtr call_service =
-    nodeHandle->create_service<ros_opcua_srvs::srv::CallMethod>("call_method", call_method);
+    nodeHandle->create_service<ros_opcua_srvs::srv::CallMethod>("call_method", &call_method);
      //ROS_DEBUG("OPC-UA client node %s: 'CallMethod' service available on: %s", ros::this_node::getName().c_str(), call_method_service.getService().c_str());
 
     // Reading of data
-    rclcpp::Service<ros_opcua_srvs::srv::Read>::SharedPtr read_service =
-    nodeHandle->create_service<ros_opcua_srvs::srv::Read>("read", read);
+    rclcpp::Service<ros_opcua_srvs::srv::Read>::SharedPtr read_service = 
+    nodeHandle->create_service<ros_opcua_srvs::srv::Read>("read", &read);
     //ROS_DEBUG("OPC-UA client node %s: 'Read' service available on: %s", ros::this_node::getName().c_str(), read_service.getService().c_str());
 
     // Writing of data
     rclcpp::Service<ros_opcua_srvs::srv::Write>::SharedPtr write_service =
-    nodeHandle->create_service<ros_opcua_srvs::srv::Write>("write", write);
+    nodeHandle->create_service<ros_opcua_srvs::srv::Write>("write", &write);
     //ROS_DEBUG("OPC-UA client node %s: 'Write' service available on: %s", ros::this_node::getName().c_str(), write_service.getService().c_str());
 
     // Subscriptions
     rclcpp::Service<ros_opcua_srvs::srv::Subscribe>::SharedPtr subscribe_service =
-    nodeHandle->create_service<ros_opcua_srvs::srv::Subscribe>("subscribe", subscribe);
+    nodeHandle->create_service<ros_opcua_srvs::srv::Subscribe>("subscribe", &subscribe);
     //ROS_DEBUG("OPC-UA client node %s: 'Subscribe' service available on: %s", ros::this_node::getName().c_str(), subscribe_service.getService().c_str());
     rclcpp::Service<ros_opcua_srvs::srv::Unsubscribe>::SharedPtr unsubscribe_service =
-    nodeHandle->create_service<ros_opcua_srvs::srv::Unsubscribe>("unsubscribe", unsubscribe);
+    nodeHandle->create_service<ros_opcua_srvs::srv::Unsubscribe>("unsubscribe", &unsubscribe);
     //ROS_DEBUG("OPC-UA client node %s: 'Unsubscribe' service available on: %s", ros::this_node::getName().c_str(), unsubscribe_service.getService().c_str());
 
 

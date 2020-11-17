@@ -20,8 +20,8 @@
  *              along with SkillPro-Framework. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ros_opcua_msgs/msg/Address.hpp"
-#include "ros_opcua_msgs/msg/TypeValue.hpp"
+#include "ros_opcua_msgs/msg/address.hpp"
+#include "ros_opcua_msgs/msg/type_value.hpp"
 
 #include <opc/ua/node.h>
 #include <opc/ua/protocol/string_utils.h>
