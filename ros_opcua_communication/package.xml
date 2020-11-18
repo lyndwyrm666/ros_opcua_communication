@@ -16,9 +16,9 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <exec_depend>ros_opcua_msgs</exec_depend>
-  <exec_depend>ros_opcua_srvs</exec_depend>
-  <exec_depend>ros_opcua_impl_freeopcua</exec_depend>
+  <depend>ros_opcua_msgs</depend>
+  <depend>ros_opcua_srvs</depend>
+  <depend>ros_opcua_impl_freeopcua</depend>
   
   <export>
     <build_type>ament_cmake</build_type>

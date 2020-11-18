@@ -18,7 +18,6 @@
   <depend>ros_opcua_msgs</depend>
   <depend>ros_opcua_srvs</depend>
   <depend>rclcpp</depend>
-  <depend>rospy</depend>
   <export>
     <build_type>ament_cmake</build_type>
   </export>
