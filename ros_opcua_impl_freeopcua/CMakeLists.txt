@@ -5,12 +5,11 @@ if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
 endif()
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+  add_compile_options(-Wall -Wpedantic -Wextra)
 endif()
 
 set(BUILD_CLIENT ON)
 set(BUILD_SERVER ON)
-set(BUILD_PYTHON ON)
 set(BUILD_TESTING OFF)
 
 add_subdirectory(freeopcua)
