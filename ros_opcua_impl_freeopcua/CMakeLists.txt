@@ -45,14 +45,14 @@ target_link_libraries(client_node ${Boost_LIBRARIES} opcuaprotocol opcuacore opc
 #############
 
 
-install(DIRECTORY launch/ DESTINATION share/${PROJECT_NAME}}
+install(DIRECTORY launch/ DESTINATION share/${PROJECT_NAME}
 )
 install(DIRECTORY include/ DESTINATION include}
 )
 
 install(TARGETS client_node
-  ARCHIVE DESTINATION lib/${PROJECT_NAME}}
-  LIBRARY DESTINATION lib/${PROJECT_NAME}}
-  RUNTIME DESTINATION lib/${PROJECT_NAME}}
+  ARCHIVE DESTINATION lib/${PROJECT_NAME}
+  LIBRARY DESTINATION lib/${PROJECT_NAME}
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 ament_package()
