@@ -16,6 +16,6 @@ Please check readme files of the packages:
 
 ## ROS Distro Support
 
-|         | Dashing |
-|:-------:|:------:|
-| Branch  | [`ros2-dashing-devel`](https://github.com/lyndwyrm666/ros_opcua_communication/tree/ros2-dashing-devel) |
+|         | Dashing | Foxy |
+|:-------:|:------:|:------:|
+| Branch  | [`ros2-dashing-devel`](https://github.com/lyndwyrm666/ros_opcua_communication/tree/ros2-dashing-devel) | [`ros2-foxy-devel`](https://github.com/lyndwyrm666/ros_opcua_communication/tree/ros2-foxy-devel) | 
