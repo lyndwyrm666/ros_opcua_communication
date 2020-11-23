@@ -49,7 +49,8 @@ install(DIRECTORY launch/ DESTINATION share/${PROJECT_NAME}
 )
 install(DIRECTORY include/ DESTINATION include}
 )
-
+install(DIRECTORY freeopcua/include/ DESTINATION include}
+)
 install(TARGETS client_node
   ARCHIVE DESTINATION lib/${PROJECT_NAME}
   LIBRARY DESTINATION lib/${PROJECT_NAME}
