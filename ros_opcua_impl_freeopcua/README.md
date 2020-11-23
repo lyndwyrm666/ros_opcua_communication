@@ -18,7 +18,7 @@ Then start your client using:
 ros2 launch ros_opcua_impl_freeopcua client.launch.py
 ```
 
-**NOTE**: Here is server run on the same computer as the server.
+**NOTE**: Here the server is run on the same computer as the client.
 If they are running on diffrent computers, instead of `localhost` insert DNS name or IP address of the computer where server is running.
 It is also recommended to cross check all values and server using *UaExpert OPC UA client*.
 
@@ -55,7 +55,7 @@ ros2 topic echo /opcuopcua_client/topic
 ```
 and you should get output after few seconds.
 
-### Exmple: Method Call
+### Example: Method Call
 ```
 ros2 service call /opcua/opcua_client/Call_method "{node:
   nodeId: 'ns=2;i=99'
@@ -71,10 +71,6 @@ As result you get "MyMethod called!" output in terminal where example server is 
 
 ### Compiling of freeopcua library (Not needed - it is done automatically)
 
-#### Compile freeopcua under ROS2 Foxy
-
-In order to compile freeopcua under Foxy you need to merge [PR356](https://github.com/FreeOpcUa/freeopcua/pull/356) into the freeopuca submodule.
-
 This package implements bindings for freeopcua - Open Source C++ OPC-UA Server and Client Library.
 
 First you need to build FreeOpcUa with following commands (asume that you are in FreeOpcUa folder):
@@ -87,5 +83,10 @@ make
 ```
 
 And change `FreeOpcUa_LIBRARIES` variable to be compatible with your environment.
+
+#### Compile freeopcua under ROS2 Foxy
+
+In order to compile freeopcua under Foxy you need to merge [PR356](https://github.com/FreeOpcUa/freeopcua/pull/356) into the freeopuca submodule.
+
 
 Enjoy!
