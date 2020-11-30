@@ -5,8 +5,8 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
         package="ros_opcua_impl_freeopcua",
-        node_namespace="opcua", 
-        node_name="opcua_client",
-        node_executable="client_node",
+        namespace="opcua", 
+        name="opcua_client",
+        executable="client_node",
         output="screen")
 ])
