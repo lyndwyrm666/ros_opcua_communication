@@ -427,45 +427,45 @@ int main (int argc, char** argv)
 
     //Connect
     rclcpp::Service<ros_opcua_srvs::srv::Connect>::SharedPtr connect_service =
-    nodeHandle->create_service<ros_opcua_srvs::srv::Connect>("connect", &connect);
+    nodeHandle->create_service<ros_opcua_srvs::srv::Connect>(std::string(nodeHandle->get_name()) + "/connect", &connect);
     setvbuf(stdout, NULL, _IONBF, BUFSIZ);
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"OPC-UA client node: 'Connect' service available on on: %s", connect_service->get_service_name());
-    
+
     //Disconnect
     rclcpp::Service<ros_opcua_srvs::srv::Disconnect>::SharedPtr disconnect_service =
-    nodeHandle->create_service<ros_opcua_srvs::srv::Disconnect>("disconnect", &disconnect);
+    nodeHandle->create_service<ros_opcua_srvs::srv::Disconnect>(std::string(nodeHandle->get_name()) + "/disconnect", &disconnect);
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"OPC-UA client node: 'Disconnect' service available on: %s", disconnect_service->get_service_name());
 
     // List node
     rclcpp::Service<ros_opcua_srvs::srv::ListNode>::SharedPtr list_service =
-    nodeHandle->create_service<ros_opcua_srvs::srv::ListNode>("list", &list_node);
+    nodeHandle->create_service<ros_opcua_srvs::srv::ListNode>(std::string(nodeHandle->get_name()) + "/list", &list_node);
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"OPC-UA client node: 'ListNode' service available on on: %s", list_service->get_service_name());
 
     // Method Call
     rclcpp::Service<ros_opcua_srvs::srv::CallMethod>::SharedPtr call_service =
-    nodeHandle->create_service<ros_opcua_srvs::srv::CallMethod>("call_method", &call_method);
+    nodeHandle->create_service<ros_opcua_srvs::srv::CallMethod>(std::string(nodeHandle->get_name()) + "/call_method", &call_method);
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"OPC-UA client node: 'CallMethod' service available on: %s", call_service->get_service_name());
 
     // Reading of data
     rclcpp::Service<ros_opcua_srvs::srv::ReadOpc>::SharedPtr read_service =
-    nodeHandle->create_service<ros_opcua_srvs::srv::ReadOpc>("read", &read_opc);
+    nodeHandle->create_service<ros_opcua_srvs::srv::ReadOpc>(std::string(nodeHandle->get_name()) + "/read", &read_opc);
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"OPC-UA client node: 'Read' service available on: %s", read_service->get_service_name());
 
     // Writing of data
     rclcpp::Service<ros_opcua_srvs::srv::WriteOpc>::SharedPtr write_service =
-    nodeHandle->create_service<ros_opcua_srvs::srv::WriteOpc>("write", &write_opc);
+    nodeHandle->create_service<ros_opcua_srvs::srv::WriteOpc>(std::string(nodeHandle->get_name()) + "/write", &write_opc);
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"OPC-UA client node: 'Write' service available on: %s", write_service->get_service_name());
 
     // Subscriptions
     rclcpp::Service<ros_opcua_srvs::srv::Subscribe>::SharedPtr subscribe_service =
-    nodeHandle->create_service<ros_opcua_srvs::srv::Subscribe>("subscribe", &subscribe);
+    nodeHandle->create_service<ros_opcua_srvs::srv::Subscribe>(std::string(nodeHandle->get_name()) + "/subscribe", &subscribe);
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"OPC-UA client node: 'Subscribe' service available on: %s", subscribe_service->get_service_name());
     rclcpp::Service<ros_opcua_srvs::srv::Unsubscribe>::SharedPtr unsubscribe_service =
-    nodeHandle->create_service<ros_opcua_srvs::srv::Unsubscribe>("unsubscribe", &unsubscribe);
+    nodeHandle->create_service<ros_opcua_srvs::srv::Unsubscribe>(std::string(nodeHandle->get_name()) + "/unsubscribe", &unsubscribe);
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"OPC-UA client node: 'Unsubscribe' service available on: %s", unsubscribe_service->get_service_name());
 
 
-    RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"OPCUA client node is ready!");
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"OPCUA client node %s is ready!", nodeHandle->get_name());
 
     rclcpp::spin(nodeHandle);
 
